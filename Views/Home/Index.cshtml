@@ -1,0 +1,363 @@
+﻿@model IEnumerable<Fish>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    :root {
+        --primary-blue: #0a4d68;
+        --accent-blue: #088395;
+        --light-blue: #05bfdb;
+        --ocean-gradient: linear-gradient(135deg, #0a4d68 0%, #088395 50%, #05bfdb 100%);
+    }
+
+    body {
+        background: linear-gradient(to bottom, #f8f9fa 0%, #e3f2fd 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        position: relative;
+        height: 70vh;
+        min-height: 500px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(10, 77, 104, 0.3), rgba(8, 131, 149, 0.6));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-content {
+        text-align: center;
+        color: white;
+        z-index: 2;
+        padding: 20px;
+    }
+
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        animation: fadeInUp 1s ease;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        animation: fadeInUp 1.2s ease;
+    }
+
+    /* Glass Card */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+    .glass-card-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin-bottom: 15px;
+    }
+
+    .glass-card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-blue);
+        margin-bottom: 10px;
+    }
+
+    .glass-card-text {
+        color: #555;
+        line-height: 1.5;
+        flex-grow: 1;
+    }
+
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin: 60px 0 40px;
+        position: relative;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        position: relative;
+        display: inline-block;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--ocean-gradient);
+            border-radius: 2px;
+        }
+
+    /* Buttons */
+    .btn-ocean {
+        background: var(--ocean-gradient);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(8, 131, 149, 0.3);
+        font-size: 0.9rem;
+    }
+
+        .btn-ocean:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(8, 131, 149, 0.4);
+            color: white;
+        }
+
+    .btn-add-fish {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--ocean-gradient);
+        border: none;
+        color: white;
+        font-size: 2rem;
+        box-shadow: 0 4px 20px rgba(8, 131, 149, 0.4);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+        .btn-add-fish:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 25px rgba(8, 131, 149, 0.5);
+        }
+
+    /* Category Grid */
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 60px;
+    }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .category-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    /* Character Fade Animation */
+    .fade-text {
+        display: inline-flex;
+    }
+
+    .char {
+        display: inline-block;
+        opacity: 0;
+        animation: fadeInOut 4s ease-in-out infinite;
+    }
+
+    @@keyframes fadeInOut {
+        0%, 100%
+
+    {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <video autoplay loop muted playsinline class="hero-video">
+        <source src="~/images/discusvideo.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay">
+        <div class="hero-content">
+            @* <h1 class="hero-title">The King of Aquariums</h1> *@
+            <h1 class="fade-text" id="hero-title">Welcome to Dahilia Creations</h1>
+            <p class="hero-subtitle">Artisan discus breeders sold responsibly at an unbeatable price</p>
+            <button class="btn btn-ocean">Explore Now</button>
+        </div>
+    </div>
+</div>
+
+<!-- Our Premium Fishes Section -->
+<div class="container">
+    <div class="section-header">
+        <h2 class="section-title">Our Premium Fishes</h2>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            No premium fishes available yet 🐠
+        </div>
+    }
+    else
+    {
+        <div class="category-grid">
+            @foreach (var fish in Model)
+            {
+                <div class="glass-card">
+                    <img src="@(string.IsNullOrEmpty(fish.ImagePath) ? "/images/no-image.png" : fish.ImagePath)"
+                         alt="@fish.FishName"
+                         class="glass-card-img" />
+
+                    <h3 class="glass-card-title">@fish.FishName</h3>
+
+                    <p class="glass-card-text">
+                        @{
+                            var desc = fish.Description ?? "";
+                            if (desc.Length > 100)
+                            {
+                                @desc.Substring(0, 100)
+                
+                                <text>...</text>
+                            }
+                            else
+                            {
+                                @desc
+                            }
+                        }
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="badge bg-success fs-6 px-3 py-2">
+                            AED @fish.Price.ToString("N2")
+                        </span>
+
+                        <a asp-controller="Fish"
+                           asp-action="Index"
+                           class="btn btn-ocean btn-sm">
+                            View
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Our Services Section -->
+<div class="container mt-5">
+    <div class="section-header">
+        <h2 class="section-title">Our Services</h2>
+    </div>
+
+    <div class="category-grid">
+        <div class="glass-card text-center">
+            <div style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 15px;">🐠</div>
+            <h3 class="glass-card-title">Expert Consultation</h3>
+            <p class="glass-card-text">Get personalized advice from our aquarium specialists for optimal fish care and tank setup.</p>
+        </div>
+
+        <div class="glass-card text-center">
+            <div style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 15px;">🚚</div>
+            <h3 class="glass-card-title">Safe Delivery</h3>
+            <p class="glass-card-text">Temperature-controlled shipping ensures your fish arrive healthy and stress-free.</p>
+        </div>
+
+        <div class="glass-card text-center">
+            <div style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 15px;">💯</div>
+            <h3 class="glass-card-title">Health Guarantee</h3>
+            <p class="glass-card-text">All fish come with a 14-day health guarantee for your peace of mind.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Add Button -->
+<button class="btn-add-fish" onclick="location.href='@Url.Action("Index", "Fish")'" title="Add New Fish">
+    +
+</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textElement = document.getElementById('hero-title');
+        const text = textElement.textContent;
+        textElement.textContent = '';
+
+        const chars = text.split('');
+        const delayIncrement = 0.1;
+
+        chars.forEach((char, index) => {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = char === ' ' ? '\u00A0' : char;
+            span.style.animationDelay = `${index * delayIncrement}s`;
+            textElement.appendChild(span);
+        });
+    });
+</script>

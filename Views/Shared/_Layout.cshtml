@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dahilia Creations</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DahiliaCreations.styles.css" asp-append-version="true" />
+    <style>
+        :root {
+            --primary-blue: #0a4d68;
+            --accent-blue: #088395;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Modern Header */
+        .site-header {
+            background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+            .site-header h1 {
+                margin: 0;
+                font-size: 2.5rem;
+                font-weight: 700;
+                letter-spacing: 2px;
+            }
+
+        /* Glass Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-blue) !important;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--primary-blue) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+            .nav-link:hover {
+                color: var(--accent-blue) !important;
+                transform: translateY(-2px);
+            }
+
+        /* Modern Footer */
+        .footer {
+            position:relative !important;
+            background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: 80px;
+        }
+
+            .footer a {
+                color: white;
+                text-decoration: underline;
+            }
+
+                .footer a:hover {
+                    color: #05bfdb;
+                }
+    </style>
+</head>
+<body>
+    @* <div class="site-header">
+        <h1 onclick="location.href='@Url.Action("Index", "Home")'">🐠 Dahilia Creations</h1>
+    </div> *@
+
+    <header>
+        @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Dahilia Creations</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav> *@
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+    
+    <footer class="footer text-center">
+        <div class="container">
+            &copy; 2025 - Dahilia Creations - Premium Aquarium Fish & Supplies<br>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

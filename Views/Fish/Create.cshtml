@@ -1,0 +1,165 @@
+﻿@model Fish
+
+@{
+    ViewData["Title"] = "Add Fish";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h4 class="mb-0">🐟 Add New Fish</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create"
+                          method="post"
+                          enctype="multipart/form-data"
+                          id="fishForm">
+
+                        <!-- Fish Name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Fish Name</label>
+                            <input asp-for="FishName"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter fish name" />
+                            <span asp-validation-for="FishName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Describe the fish (size, color, behavior, etc.)"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Price</label>
+
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text fw-bold">AED</span>
+                                <input asp-for="Price"
+                                       type="number"
+                                       min="1"
+                                       max="99999"
+                                       step="0.01"
+                                       class="form-control"
+                                       placeholder="Enter price" />
+                            </div>
+
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+
+                        <!-- Image Upload -->
+                        <div class="mb-4 text-center">
+                            <label class="form-label fw-semibold d-block">Upload Fish Image</label>
+
+                            <div class="upload-box" onclick="triggerUpload()">
+                                <img id="previewImage"
+                                     src="/images/upload-icon.jpg"
+                                     class="upload-icon" />
+                            </div>
+
+                            <input asp-for="ImageFile"
+                                   type="file"
+                                   accept="image/*"
+                                   id="imageInput"
+                                   hidden />
+
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <button type="button"
+                                    class="btn btn-outline-danger px-4"
+                                    onclick="confirmClear()">
+                                Clear
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-success px-4"
+                                    onclick="confirmSave()">
+                                Save
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function triggerUpload() {
+            document.getElementById("imageInput").click();
+        }
+
+        // Image preview
+        document.getElementById("imageInput").addEventListener("change", function (e) {
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                Swal.fire("Invalid File", "Please upload an image", "error");
+                this.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById("previewImage").src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Save confirmation
+        function confirmSave() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to save this fish?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#198754",
+                cancelButtonColor: "#dc3545",
+                confirmButtonText: "Yes, Save"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("fishForm").submit();
+                }
+            });
+        }
+
+        // Clear confirmation
+        function confirmClear() {
+            Swal.fire({
+                title: "Clear form?",
+                text: "All entered data will be removed",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                confirmButtonText: "Yes, Clear"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("fishForm").reset();
+                    document.getElementById("previewImage").src = "/images/upload-icon.png";
+                }
+            });
+        }
+    </script>
+}
+

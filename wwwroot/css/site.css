@@ -1,0 +1,58 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-image: linear-gradient(to right top, #335c99, #3188aa, #73afb0, #b9d1c4, #f3f4f0);
+}
+
+.upload-box {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #6c757d;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: auto;
+    transition: 0.3s;
+    background-color: #f8f9fa;
+}
+
+.upload-box:hover {
+    background-color: #e9ecef;
+    border-color: #198754;
+}
+
+.upload-icon {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease-in-out;
+}
+
+.card-img-top {
+    background-color: #f8f9fa;
+}

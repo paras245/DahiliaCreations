@@ -300,9 +300,10 @@
                         </span>
 
                         <a asp-controller="Fish"
-                           asp-action="Index"
+                           asp-action="Details"
+                           asp-route-id="@fish.Id"
                            class="btn btn-ocean btn-sm">
-                            View
+                            View <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </a>
                     </div>
                 </div>

@@ -1,0 +1,156 @@
+@model Fish
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    :root {
+        --primary-blue: #0a4d68;
+        --accent-blue: #088395;
+        --light-blue: #05bfdb;
+        --ocean-gradient: linear-gradient(135deg, #0a4d68 0%, #088395 50%, #05bfdb 100%);
+    }
+
+    /* Glass Card */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .btn-ocean {
+        background: var(--ocean-gradient);
+        border: none;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(8, 131, 149, 0.3);
+    }
+
+    .btn-ocean:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(8, 131, 149, 0.4);
+        color: white;
+    }
+
+    .size-btn {
+        width: 45px;
+        height: 45px;
+        border: 1px solid #ddd;
+        background: white;
+        color: #555;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .size-btn:hover, .size-btn.active {
+        background: var(--primary-blue);
+        color: white;
+        border-color: var(--primary-blue);
+    }
+
+    /* Carousel Indicators */
+    .carousel-indicators [data-bs-target] {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin: 0 6px;
+        background-color: var(--primary-blue);
+        opacity: 0.5;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-indicators .active {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="glass-card overflow-hidden">
+                <div class="row g-0">
+                    <!-- Image Section -->
+                    <!-- Image Section -->
+                    <div class="col-md-6 bg-white d-flex align-items-center justify-content-center p-0 position-relative">
+                        <div id="fishCarousel" class="carousel slide w-100 h-100" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1" style="background-color: var(--primary-blue);"></button>
+                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="1" aria-label="Slide 2" style="background-color: var(--primary-blue);"></button>
+                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="2" aria-label="Slide 3" style="background-color: var(--primary-blue);"></button>
+                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="3" aria-label="Slide 4" style="background-color: var(--primary-blue);"></button>
+                            </div>
+                            <div class="carousel-inner h-100">
+                                @for (int i = 0; i < 4; i++)
+                                {
+                                    <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
+                                        <div class="d-flex align-items-center justify-content-center h-100 p-4">
+                                            <img src="@(string.IsNullOrEmpty(Model.ImagePath) ? "/images/no-image.png" : Model.ImagePath)"
+                                                 class="img-fluid rounded shadow-sm"
+                                                 style="max-height: 400px; object-fit: contain;"
+                                                 alt="@Model.FishName @(i + 1)">
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#fishCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: var(--primary-blue); border-radius: 50%; padding: 20px; background-size: 50% 50%;"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#fishCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: var(--primary-blue); border-radius: 50%; padding: 20px; background-size: 50% 50%;"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+                        <span class="text-uppercase text-muted small fw-bold mb-2">Aquarium Fish</span>
+                        <h1 class="display-6 fw-bold" style="color: var(--primary-blue);">@Model.FishName</h1>
+                        <h2 class="h3 mb-4" style="color: var(--accent-blue);">AED @Model.Price.ToString("N2")</h2>
+                        
+                        <p class="text-muted mb-4" style="line-height: 1.7;">
+                            @Model.Description
+                        </p>
+
+                        <!-- Size Selector (Static) -->
+                        @* <div class="mb-4">
+                            <label class="small fw-bold text-muted mb-2 d-block text-uppercase">Choose Size</label>
+                            <div class="d-flex gap-2">
+                                <button class="btn size-btn rounded-circle">S</button>
+                                <button class="btn size-btn rounded-circle">M</button>
+                                <button class="btn size-btn rounded-circle active">L</button>
+                                <button class="btn size-btn rounded-circle">XL</button>
+                            </div>
+                        </div> *@
+
+                        <!-- Actions -->
+                        <div class="d-flex gap-3 mt-auto">
+                            <button class="btn btn-ocean flex-grow-1 py-3 rounded-pill">
+                                Add to Cart
+                            </button>
+                            @* <button class="btn btn-outline-secondary rounded-circle" style="width: 54px; height: 54px;">
+                                <i class="fa-regular fa-heart"></i>
+                            </button> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="text-decoration-none" style="color: var(--primary-blue);">
+            <i class="fa-solid fa-arrow-left me-2"></i> Back to Gallery
+        </a>
+    </div>
+</div>

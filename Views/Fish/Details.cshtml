@@ -82,18 +82,27 @@
                     <!-- Image Section -->
                     <div class="col-md-6 bg-white d-flex align-items-center justify-content-center p-0 position-relative">
                         <div id="fishCarousel" class="carousel slide w-100 h-100" data-bs-ride="carousel">
+                            @{
+                                var images = new List<string>();
+                                if (!string.IsNullOrEmpty(Model.ImagePath)) images.Add(Model.ImagePath);
+                                if (!string.IsNullOrEmpty(Model.ImagePath2)) images.Add(Model.ImagePath2);
+                                if (!string.IsNullOrEmpty(Model.ImagePath3)) images.Add(Model.ImagePath3);
+
+                                if (images.Count == 0) images.Add("/images/no-image.png");
+                            }
+
                             <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1" style="background-color: var(--primary-blue);"></button>
-                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="1" aria-label="Slide 2" style="background-color: var(--primary-blue);"></button>
-                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="2" aria-label="Slide 3" style="background-color: var(--primary-blue);"></button>
-                                <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="3" aria-label="Slide 4" style="background-color: var(--primary-blue);"></button>
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <button type="button" data-bs-target="#fishCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)" style="background-color: var(--primary-blue);"></button>
+                                }
                             </div>
                             <div class="carousel-inner h-100">
-                                @for (int i = 0; i < 4; i++)
+                                @for (int i = 0; i < images.Count; i++)
                                 {
                                     <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
                                         <div class="d-flex align-items-center justify-content-center h-100 p-4">
-                                            <img src="@(string.IsNullOrEmpty(Model.ImagePath) ? "/images/no-image.png" : Model.ImagePath)"
+                                            <img src="@images[i]"
                                                  class="img-fluid rounded shadow-sm"
                                                  style="max-height: 400px; object-fit: contain;"
                                                  alt="@Model.FishName @(i + 1)">
@@ -101,14 +110,17 @@
                                     </div>
                                 }
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#fishCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: var(--primary-blue); border-radius: 50%; padding: 20px; background-size: 50% 50%;"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#fishCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: var(--primary-blue); border-radius: 50%; padding: 20px; background-size: 50% 50%;"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+                            @if (images.Count > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#fishCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: var(--primary-blue); border-radius: 50%; padding: 20px; background-size: 50% 50%;"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#fishCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: var(--primary-blue); border-radius: 50%; padding: 20px; background-size: 50% 50%;"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            }
                         </div>
                     </div>
 

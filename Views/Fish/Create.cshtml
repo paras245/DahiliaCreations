@@ -57,23 +57,49 @@
                         </div>
 
 
-                        <!-- Image Upload -->
-                        <div class="mb-4 text-center">
-                            <label class="form-label fw-semibold d-block">Upload Fish Image</label>
+                        <!-- Image Uploads (Capsule Style) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold d-block mb-3">Fish Images</label>
 
-                            <div class="upload-box" onclick="triggerUpload()">
-                                <img id="previewImage"
-                                     src="/images/upload-icon.jpg"
-                                     class="upload-icon" height="200px" />
+                            <!-- Capsule 1 -->
+                            <div class="upload-capsule" id="capsule1" onclick="triggerUpload(1)">
+                                <div class="capsule-content">
+                                    <i class="fa-solid fa-cloud-arrow-up capsule-icon" id="icon1"></i>
+                                    <span class="capsule-text">Upload Main Image (Required)</span>
+                                    <img id="previewImage1" class="capsule-preview" />
+                                </div>
+                                <div class="progress-line-container" id="progressContainer1">
+                                    <div class="progress-line" id="progressBar1"></div>
+                                </div>
+                                <input asp-for="ImageFile" type="file" accept="image/*" id="imageInput1" hidden onchange="previewImage(this, 1)" />
+                            </div>
+                            <span asp-validation-for="ImageFile" class="text-danger mb-3 d-block"></span>
+
+                            <!-- Capsule 2 -->
+                            <div class="upload-capsule" id="capsule2" onclick="triggerUpload(2)">
+                                <div class="capsule-content">
+                                    <i class="fa-solid fa-cloud-arrow-up capsule-icon" id="icon2"></i>
+                                    <span class="capsule-text">Upload Image 2 (Optional)</span>
+                                    <img id="previewImage2" class="capsule-preview" />
+                                </div>
+                                <div class="progress-line-container" id="progressContainer2">
+                                    <div class="progress-line" id="progressBar2"></div>
+                                </div>
+                                <input asp-for="ImageFile2" type="file" accept="image/*" id="imageInput2" hidden onchange="previewImage(this, 2)" />
                             </div>
 
-                            <input asp-for="ImageFile"
-                                   type="file"
-                                   accept="image/*"
-                                   id="imageInput"
-                                   hidden />
-
-                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            <!-- Capsule 3 -->
+                            <div class="upload-capsule" id="capsule3" onclick="triggerUpload(3)">
+                                <div class="capsule-content">
+                                    <i class="fa-solid fa-cloud-arrow-up capsule-icon" id="icon3"></i>
+                                    <span class="capsule-text">Upload Image 3 (Optional)</span>
+                                    <img id="previewImage3" class="capsule-preview" />
+                                </div>
+                                <div class="progress-line-container" id="progressContainer3">
+                                    <div class="progress-line" id="progressBar3"></div>
+                                </div>
+                                <input asp-for="ImageFile3" type="file" accept="image/*" id="imageInput3" hidden onchange="previewImage(this, 3)" />
+                            </div>
                         </div>
 
                         <!-- Buttons -->
@@ -100,32 +126,133 @@
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        function triggerUpload() {
-            document.getElementById("imageInput").click();
+    <style>
+        .upload-capsule {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 50px; /* Capsule shape */
+            padding: 15px 30px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        // Image preview
-        document.getElementById("imageInput").addEventListener("change", function (e) {
-            const file = e.target.files[0];
+        .upload-capsule:hover {
+            border-color: #0d6efd;
+            background: #e9ecef;
+        }
 
+        .upload-capsule.has-file {
+            border-style: solid;
+            border-color: #198754;
+            background: #f0fff4;
+        }
+
+        .capsule-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .capsule-icon {
+            font-size: 1.5rem;
+            color: #6c757d;
+        }
+
+        .capsule-text {
+            font-weight: 600;
+            color: #495057;
+            flex-grow: 1;
+        }
+
+        .capsule-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none; /* Hidden initially */
+        }
+
+        /* Progress Bar */
+        .progress-line-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            display: none;
+        }
+
+        .progress-line {
+            height: 100%;
+            background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+
+    <script>
+        function triggerUpload(id) {
+            document.getElementById("imageInput" + id).click();
+        }
+
+        function previewImage(input, id) {
+            const file = input.files[0];
             if (!file) return;
 
             if (!file.type.startsWith("image/")) {
                 Swal.fire("Invalid File", "Please upload an image", "error");
-                this.value = "";
+                input.value = "";
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function () {
-                document.getElementById("previewImage").src = reader.result;
-            };
-            reader.readAsDataURL(file);
-        });
+            // UI Updates
+            const capsule = document.getElementById("capsule" + id);
+            const progressBarContainer = document.getElementById("progressContainer" + id);
+            const progressBar = document.getElementById("progressBar" + id);
+            const previewImg = document.getElementById("previewImage" + id);
+            const icon = document.getElementById("icon" + id);
+
+            // Reset
+            progressBar.style.width = "0%";
+            progressBarContainer.style.display = "block";
+            previewImg.style.display = "none";
+            capsule.classList.remove("has-file");
+
+            // Simulate Upload Progress
+            setTimeout(() => {
+                progressBar.style.width = "100%";
+            }, 50);
+
+            // After "upload" finishes
+            setTimeout(() => {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    previewImg.src = reader.result;
+                    previewImg.style.display = "block";
+                    capsule.classList.add("has-file");
+                    icon.className = "fa-solid fa-check-circle text-success capsule-icon";
+                    
+                    // Hide progress bar after success
+                    setTimeout(() => {
+                        progressBarContainer.style.display = "none";
+                    }, 500);
+                };
+                reader.readAsDataURL(file);
+            }, 1000); // 1 second simulated delay
+        }
 
         // Save confirmation
         function confirmSave() {
@@ -156,7 +283,12 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById("fishForm").reset();
-                    document.getElementById("previewImage").src = "/images/upload-icon.png";
+                    // Reset UI
+                    for(let i=1; i<=3; i++) {
+                        document.getElementById("previewImage" + i).style.display = "none";
+                        document.getElementById("capsule" + i).classList.remove("has-file");
+                        document.getElementById("icon" + i).className = "fa-solid fa-cloud-arrow-up capsule-icon";
+                    }
                 }
             });
         }

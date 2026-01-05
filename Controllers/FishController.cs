@@ -34,25 +34,45 @@ namespace DahiliaCreations.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (fish.ImageFile != null)
+                try
                 {
-                    string uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
-                    Directory.CreateDirectory(uploadsFolder);
+                    if (fish.ImageFile != null) fish.ImagePath = await UploadFile(fish.ImageFile);
+                    if (fish.ImageFile2 != null) fish.ImagePath2 = await UploadFile(fish.ImageFile2);
+                    if (fish.ImageFile3 != null) fish.ImagePath3 = await UploadFile(fish.ImageFile3);
 
-                    string fileName = Guid.NewGuid() + Path.GetExtension(fish.ImageFile.FileName);
-                    string filePath = Path.Combine(uploadsFolder, fileName);
+                    _context.Add(fish);
+                    await _context.SaveChangesAsync();
 
-                    using var fileStream = new FileStream(filePath, FileMode.Create);
-                    await fish.ImageFile.CopyToAsync(fileStream);
-
-                    fish.ImagePath = "/uploads/" + fileName;
+                    TempData["ToastrType"] = "success";
+                    TempData["ToastrMessage"] = "Fish created successfully!";
+                    return RedirectToAction(nameof(Index));
                 }
-
-                _context.Add(fish);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    TempData["ToastrType"] = "error";
+                    TempData["ToastrMessage"] = "Error creating fish: " + ex.Message;
+                }
+            }
+            else
+            {
+                TempData["ToastrType"] = "warning";
+                TempData["ToastrMessage"] = "Please check the form for errors.";
             }
             return View(fish);
+        }
+
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            string uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+            Directory.CreateDirectory(uploadsFolder);
+
+            string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            string filePath = Path.Combine(uploadsFolder, fileName);
+
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(fileStream);
+
+            return "/uploads/" + fileName;
         }
 
         // GET: Fish/Edit/5

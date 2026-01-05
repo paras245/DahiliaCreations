@@ -18,7 +18,13 @@ public class Fish
     public decimal Price { get; set; }
 
     public string? ImagePath { get; set; }
+    public string? ImagePath2 { get; set; }
+    public string? ImagePath3 { get; set; }
 
     [NotMapped]
     public IFormFile? ImageFile { get; set; }
+    [NotMapped]
+    public IFormFile? ImageFile2 { get; set; }
+    [NotMapped]
+    public IFormFile? ImageFile3 { get; set; }
 }

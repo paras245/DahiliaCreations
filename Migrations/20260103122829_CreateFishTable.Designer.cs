@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DahiliaCreations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260101102120_initial")]
-    partial class initial
+    [Migration("20260103122829_CreateFishTable")]
+    partial class CreateFishTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,12 @@ namespace DahiliaCreations.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath3")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")

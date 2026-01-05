@@ -41,6 +41,12 @@ namespace DahiliaCreations.Migrations
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagePath2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath3")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 

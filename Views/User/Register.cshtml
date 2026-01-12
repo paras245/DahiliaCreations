@@ -1,0 +1,216 @@
+@model DahiliaCreations.Models.User
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dahilia Creations</title>
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+</head>
+<body>
+    <video autoplay muted loop id="bgVideo">
+        <source src="~/images/nemo-fis-wallpaper.mov" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Create Account</h2>
+            <p class="subtitle">Join us today! Create your account</p>
+
+            <form asp-action="Register" method="post" id="registerForm">
+                @Html.AntiForgeryToken()
+                
+                <div class="form-group">
+                    <label asp-for="Username">Username</label>
+                    <div class="input-with-icon">
+                        <input asp-for="Username" 
+                               class="form-control" 
+                               placeholder="Choose a username" 
+                               required 
+                               autocomplete="username" />
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <div class="input-with-icon">
+                        <input asp-for="Email" 
+                               type="email" 
+                               class="form-control" 
+                               placeholder="Enter your email" 
+                               required 
+                               autocomplete="email" />
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PasswordHash">Password</label>
+                    <div class="input-with-icon">
+                        <input asp-for="PasswordHash" 
+                               type="password" 
+                               class="form-control" 
+                               id="password" 
+                               placeholder="Create a password" 
+                               required 
+                               autocomplete="new-password" />
+                        <i class="fas fa-eye toggle-password" data-target="#password" style="cursor: pointer;"></i>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="strengthBar"></div>
+                    </div>
+                    <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <input type="password" 
+                               class="form-control" 
+                               id="confirmPassword" 
+                               name="confirmPassword"
+                               placeholder="Confirm your password" 
+                               required 
+                               autocomplete="new-password" />
+                        <i class="fas fa-eye toggle-password" data-target="#confirmPassword" style="cursor: pointer;"></i>
+                    </div>
+                    <span id="passwordMatchError" class="text-danger" style="display: none; font-size: 0.85rem; color: #ef9a9a;">Passwords do not match</span>
+                </div>
+
+                <div class="form-check" style="margin-bottom: 25px;">
+                    <input type="checkbox" class="form-check-input" id="agreeTerms" required />
+                    <label class="form-check-label" for="agreeTerms">
+                        I agree to the <a href="#" class="auth-link" style="display: inline;">Terms & Conditions</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth" id="submitBtn">
+                    Create Account
+                </button>
+
+                <div class="auth-footer">
+                    Already have an account? <a href="@Url.Action("Login", "User")">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Toastr configuration
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+
+            @if (TempData["ToastrMessage"] != null)
+            {
+                var type = TempData["ToastrType"]?.ToString() ?? "info";
+                var message = TempData["ToastrMessage"]?.ToString();
+                <text>
+                    toastr["@type"](@Html.Raw(Json.Serialize(message)));
+                </text>
+            }
+
+            // Password Toggle
+            $('.toggle-password').on('click', function() {
+                const targetId = $(this).data('target');
+                const input = $(targetId);
+                const icon = $(this);
+
+                if (input.attr('type') === 'password') {
+                    input.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    input.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            // Password strength checker
+            $('#password').on('input', function() {
+                const password = $(this).val();
+                const strengthBar = $('#strengthBar');
+                let strength = 0;
+
+                if (password.length >= 8) strength++;
+                if (password.match(/[a-z]+/)) strength++;
+                if (password.match(/[A-Z]+/)) strength++;
+                if (password.match(/[0-9]+/)) strength++;
+                if (password.match(/[$@@#&!]+/)) strength++;
+
+                strengthBar.removeClass('weak medium strong');
+                
+                if (strength <= 2) {
+                    strengthBar.addClass('weak');
+                } else if (strength <= 4) {
+                    strengthBar.addClass('medium');
+                } else {
+                    strengthBar.addClass('strong');
+                }
+            });
+
+            // Password match validation
+            function checkPasswordMatch() {
+                const password = $('#password').val();
+                const confirmPassword = $('#confirmPassword').val();
+                const errorSpan = $('#passwordMatchError');
+                const submitBtn = $('#submitBtn');
+
+                if (confirmPassword.length > 0) {
+                    if (password !== confirmPassword) {
+                        errorSpan.show();
+                        submitBtn.prop('disabled', true);
+                        submitBtn.css('opacity', '0.5');
+                    } else {
+                        errorSpan.hide();
+                        submitBtn.prop('disabled', false);
+                        submitBtn.css('opacity', '1');
+                    }
+                }
+            }
+
+            $('#password, #confirmPassword').on('input', checkPasswordMatch);
+
+            // Form submission with loading state
+            $('#registerForm').on('submit', function(e) {
+                const password = $('#password').val();
+                const confirmPassword = $('#confirmPassword').val();
+
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    toastr.error('Passwords do not match');
+                    return false;
+                }
+
+                const submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.addClass('loading');
+                submitBtn.text('Creating account...');
+            });
+
+            // Input focus animations
+            $('.form-control').on('focus', function() {
+                $(this).closest('.form-group').find('label').css('color', 'rgba(138, 180, 248, 0.9)');
+            });
+
+            $('.form-control').on('blur', function() {
+                $(this).closest('.form-group').find('label').css('color', 'rgba(255, 255, 255, 0.9)');
+            });
+        });
+    </script>
+</body>
+</html>

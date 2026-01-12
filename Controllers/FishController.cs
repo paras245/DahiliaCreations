@@ -1,4 +1,5 @@
 ﻿using DahiliaCreations.Data;
+using DahiliaCreations.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,19 @@ namespace DahiliaCreations.Controllers
         // GET: Fish
         public async Task<IActionResult> Index()
         {
+            // Check if user is logged in
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["ToastrType"] = "warning";
+                TempData["ToastrMessage"] = "Please login to view fish.";
+                return RedirectToAction("Login", "User");
+            }
+
             return View(await _context.Fish.ToListAsync());
         }
 
+        [AuthorizeRole("Admin")]
         // GET: Fish/Create
         public IActionResult Create()
         {
@@ -30,6 +41,7 @@ namespace DahiliaCreations.Controllers
         // POST: Fish/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> Create(Fish fish)
         {
             if (ModelState.IsValid)
@@ -76,6 +88,7 @@ namespace DahiliaCreations.Controllers
         }
 
         // GET: Fish/Edit/5
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var fish = await _context.Fish.FindAsync(id);
@@ -86,6 +99,7 @@ namespace DahiliaCreations.Controllers
         // POST: Fish/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> Edit(int id, Fish fish)
         {
             if (id != fish.Id) return NotFound();
@@ -114,6 +128,7 @@ namespace DahiliaCreations.Controllers
         }
 
         // GET: Fish/Delete/5
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var fish = await _context.Fish.FindAsync(id);
@@ -124,6 +139,7 @@ namespace DahiliaCreations.Controllers
         // POST: Fish/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var fish = await _context.Fish.FindAsync(id);
@@ -134,6 +150,15 @@ namespace DahiliaCreations.Controllers
         // GET: Fish/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            // Check if user is logged in
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["ToastrType"] = "warning";
+                TempData["ToastrMessage"] = "Please login to view fish details.";
+                return RedirectToAction("Login", "User");
+            }
+
             if (id == null)
             {
                 return NotFound();

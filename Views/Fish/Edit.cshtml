@@ -1,0 +1,256 @@
+@model Fish
+
+@{
+    ViewData["Title"] = "Edit Fish";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center rounded-top-4">
+                    <h4 class="mb-0">✏️ Edit Fish</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Edit"
+                          method="post"
+                          enctype="multipart/form-data"
+                          id="fishForm">
+                        
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ImagePath" />
+                        <input type="hidden" asp-for="ImagePath2" />
+                        <input type="hidden" asp-for="ImagePath3" />
+
+                        <!-- Fish Name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Fish Name</label>
+                            <input asp-for="FishName"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter fish name" />
+                            <span asp-validation-for="FishName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Describe the fish"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Price</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text fw-bold">AED</span>
+                                <input asp-for="Price"
+                                       type="number"
+                                       min="1"
+                                       max="99999"
+                                       step="0.01"
+                                       class="form-control" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <!-- Image Uploads -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold d-block mb-3">Update Images</label>
+
+                            <!-- Capsule 1 -->
+                            <div class="upload-capsule @(!string.IsNullOrEmpty(Model.ImagePath) ? "has-file" : "")" id="capsule1" onclick="triggerUpload(1)">
+                                <div class="capsule-content">
+                                    <i class="@(!string.IsNullOrEmpty(Model.ImagePath) ? "fa-solid fa-check-circle text-success" : "fa-solid fa-cloud-arrow-up") capsule-icon" id="icon1"></i>
+                                    <span class="capsule-text">Main Image</span>
+                                    <img id="previewImage1" class="capsule-preview" src="@Model.ImagePath" style="@(!string.IsNullOrEmpty(Model.ImagePath) ? "display:block" : "display:none")" />
+                                </div>
+                                <div class="progress-line-container" id="progressContainer1">
+                                    <div class="progress-line" id="progressBar1"></div>
+                                </div>
+                                <input asp-for="ImageFile" type="file" accept="image/*" id="imageInput1" hidden onchange="previewImage(this, 1)" />
+                            </div>
+
+                            <!-- Capsule 2 -->
+                            <div class="upload-capsule @(!string.IsNullOrEmpty(Model.ImagePath2) ? "has-file" : "")" id="capsule2" onclick="triggerUpload(2)">
+                                <div class="capsule-content">
+                                    <i class="@(!string.IsNullOrEmpty(Model.ImagePath2) ? "fa-solid fa-check-circle text-success" : "fa-solid fa-cloud-arrow-up") capsule-icon" id="icon2"></i>
+                                    <span class="capsule-text">Image 2</span>
+                                    <img id="previewImage2" class="capsule-preview" src="@Model.ImagePath2" style="@(!string.IsNullOrEmpty(Model.ImagePath2) ? "display:block" : "display:none")" />
+                                </div>
+                                <div class="progress-line-container" id="progressContainer2">
+                                    <div class="progress-line" id="progressBar2"></div>
+                                </div>
+                                <input asp-for="ImageFile2" type="file" accept="image/*" id="imageInput2" hidden onchange="previewImage(this, 2)" />
+                            </div>
+
+                            <!-- Capsule 3 -->
+                            <div class="upload-capsule @(!string.IsNullOrEmpty(Model.ImagePath3) ? "has-file" : "")" id="capsule3" onclick="triggerUpload(3)">
+                                <div class="capsule-content">
+                                    <i class="@(!string.IsNullOrEmpty(Model.ImagePath3) ? "fa-solid fa-check-circle text-success" : "fa-solid fa-cloud-arrow-up") capsule-icon" id="icon3"></i>
+                                    <span class="capsule-text">Image 3</span>
+                                    <img id="previewImage3" class="capsule-preview" src="@Model.ImagePath3" style="@(!string.IsNullOrEmpty(Model.ImagePath3) ? "display:block" : "display:none")" />
+                                </div>
+                                <div class="progress-line-container" id="progressContainer3">
+                                    <div class="progress-line" id="progressBar3"></div>
+                                </div>
+                                <input asp-for="ImageFile3" type="file" accept="image/*" id="imageInput3" hidden onchange="previewImage(this, 3)" />
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                            <button type="button" class="btn btn-primary px-4" onclick="confirmSave()">Save Changes</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .upload-capsule {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 50px;
+            padding: 15px 30px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .upload-capsule:hover {
+            border-color: #0d6efd;
+            background: #e9ecef;
+        }
+
+        .upload-capsule.has-file {
+            border-style: solid;
+            border-color: #198754;
+            background: #f0fff4;
+        }
+
+        .capsule-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .capsule-icon {
+            font-size: 1.5rem;
+            color: #6c757d;
+        }
+
+        .capsule-text {
+            font-weight: 600;
+            color: #495057;
+            flex-grow: 1;
+        }
+
+        .capsule-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-line-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            display: none;
+        }
+
+        .progress-line {
+            height: 100%;
+            background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+
+    <script>
+        function triggerUpload(id) {
+            document.getElementById("imageInput" + id).click();
+        }
+
+        function previewImage(input, id) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                Swal.fire("Invalid File", "Please upload an image", "error");
+                input.value = "";
+                return;
+            }
+
+            const capsule = document.getElementById("capsule" + id);
+            const progressBarContainer = document.getElementById("progressContainer" + id);
+            const progressBar = document.getElementById("progressBar" + id);
+            const previewImg = document.getElementById("previewImage" + id);
+            const icon = document.getElementById("icon" + id);
+
+            progressBar.style.width = "0%";
+            progressBarContainer.style.display = "block";
+            
+            setTimeout(() => {
+                progressBar.style.width = "100%";
+            }, 50);
+
+            setTimeout(() => {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    previewImg.src = reader.result;
+                    previewImg.style.display = "block";
+                    capsule.classList.add("has-file");
+                    icon.className = "fa-solid fa-check-circle text-success capsule-icon";
+                    
+                    setTimeout(() => {
+                        progressBarContainer.style.display = "none";
+                    }, 500);
+                };
+                reader.readAsDataURL(file);
+            }, 1000);
+        }
+
+        function confirmSave() {
+            Swal.fire({
+                title: "Save Changes?",
+                text: "Do you want to update this fish?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#0d6efd",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, Update"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("fishForm").submit();
+                }
+            });
+        }
+    </script>
+}

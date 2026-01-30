@@ -158,9 +158,9 @@
                             }
                             else
                             {
-                                <button class="btn btn-ocean flex-grow-1 py-3 rounded-pill" disabled>
-                                    <i class="fas fa-shopping-cart"></i> Add to Cart (Coming Soon)
-                                </button>
+                                <a href="https://wa.me/971508803510?text=Hi I am interested to discuss on this fish @Model.FishName" target="_blank" class="btn btn-success flex-grow-1 py-3 rounded-pill text-white fw-bold shadow-sm">
+                                    <i class="fab fa-whatsapp fa-lg me-2"></i> Chat with Us
+                                </a>
                             }
                         </div>
                     </div>
@@ -170,8 +170,8 @@
     </div>
     
     <div class="text-center mt-4">
-        <a asp-controller="Fish" asp-action="Index" class="text-decoration-none" style="color: var(--primary-blue);">
-            <i class="fa-solid fa-arrow-left me-2"></i> Back to Fish List
+        <a asp-controller="Home" asp-action="Index" class="text-decoration-none" style="color: var(--primary-blue);">
+            <i class="fa-solid fa-arrow-left me-2"></i> Back to Main Page
         </a>
     </div>
 </div>

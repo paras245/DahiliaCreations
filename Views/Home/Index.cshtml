@@ -327,9 +327,12 @@
 </div>
 
 <!-- Floating Add Button -->
-<button class="btn-add-fish" onclick="location.href='@Url.Action("Index", "Fish")'" title="Add New Fish">
-    +
-</button>
+@if (Context.Session.GetString("UserRole") == "Admin")
+{
+    <button class="btn-add-fish" onclick="location.href='@Url.Action("Create", "Fish")'" title="Add New Fish">
+        +
+    </button>
+}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

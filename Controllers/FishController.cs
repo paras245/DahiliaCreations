@@ -19,14 +19,7 @@ namespace DahiliaCreations.Controllers
         // GET: Fish
         public async Task<IActionResult> Index()
         {
-            // Check if user is logged in
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
-            {
-                TempData["ToastrType"] = "warning";
-                TempData["ToastrMessage"] = "Please login to view fish.";
-                return RedirectToAction("Login", "User");
-            }
+// Check removed to allow public access
 
             return View(await _context.Fish.ToListAsync());
         }
@@ -143,21 +136,36 @@ namespace DahiliaCreations.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var fish = await _context.Fish.FindAsync(id);
-            _context.Fish.Remove(fish);
-            await _context.SaveChangesAsync();
+            if (fish != null)
+            {
+                // Delete Images
+                DeleteImage(fish.ImagePath);
+                DeleteImage(fish.ImagePath2);
+                DeleteImage(fish.ImagePath3);
+
+                _context.Fish.Remove(fish);
+                await _context.SaveChangesAsync();
+                TempData["ToastrType"] = "success";
+                TempData["ToastrMessage"] = "Fish deleted successfully.";
+            }
             return RedirectToAction(nameof(Index));
+        }
+
+        private void DeleteImage(string imagePath)
+        {
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                string fullPath = Path.Combine(_env.WebRootPath, imagePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+            }
         }
         // GET: Fish/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            // Check if user is logged in
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
-            {
-                TempData["ToastrType"] = "warning";
-                TempData["ToastrMessage"] = "Please login to view fish details.";
-                return RedirectToAction("Login", "User");
-            }
+// Check removed to allow public access
 
             if (id == null)
             {

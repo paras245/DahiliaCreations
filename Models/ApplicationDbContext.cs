@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DahiliaCreations.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DahiliaCreations.Data
 {
@@ -8,6 +9,7 @@ namespace DahiliaCreations.Data
             : base(options) { }
 
         public DbSet<Fish> Fish { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 
 }

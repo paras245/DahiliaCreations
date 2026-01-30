@@ -147,12 +147,21 @@
 
                         <!-- Actions -->
                         <div class="d-flex gap-3 mt-auto">
-                            <button class="btn btn-ocean flex-grow-1 py-3 rounded-pill">
-                                Add to Cart
-                            </button>
-                            @* <button class="btn btn-outline-secondary rounded-circle" style="width: 54px; height: 54px;">
-                                <i class="fa-regular fa-heart"></i>
-                            </button> *@
+                            @if (Context.Session.GetString("UserRole") == "Admin")
+                            {
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary flex-grow-1 py-3 rounded-pill">
+                                    <i class="fas fa-edit"></i> Edit Fish
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger flex-grow-1 py-3 rounded-pill">
+                                    <i class="fas fa-trash"></i> Delete Fish
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-ocean flex-grow-1 py-3 rounded-pill" disabled>
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart (Coming Soon)
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -161,8 +170,8 @@
     </div>
     
     <div class="text-center mt-4">
-        <a asp-controller="Home" asp-action="Index" class="text-decoration-none" style="color: var(--primary-blue);">
-            <i class="fa-solid fa-arrow-left me-2"></i> Back to Gallery
+        <a asp-controller="Fish" asp-action="Index" class="text-decoration-none" style="color: var(--primary-blue);">
+            <i class="fa-solid fa-arrow-left me-2"></i> Back to Fish List
         </a>
     </div>
 </div>

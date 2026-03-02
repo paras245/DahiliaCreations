@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DahiliaCreations.Controllers
 {
+    //Access Modifier class keyword ControllerNamr : Inherited Class
     public class FishController : Controller
     {
         private readonly ApplicationDbContext _context;

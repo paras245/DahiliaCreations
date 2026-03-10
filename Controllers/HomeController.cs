@@ -6,11 +6,16 @@ using System.Diagnostics;
 
 namespace DahiliaCreations.Controllers
 {
+    //Access Modifier class keyword ControllerName : Inherited Class
     public class HomeController : Controller
     {
+        //Encapsulation readonly value in run time classname variable name
         private readonly ILogger<HomeController> _logger;
+
+        //Encapsulation reaonly value on run time class name variable name
         private readonly ApplicationDbContext _context;
 
+        //contructor depency injection 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
